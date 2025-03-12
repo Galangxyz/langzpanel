@@ -7,6 +7,7 @@ const fs = require("fs");
 // Inisialisasi server
 const app = express();
 const PORT = process.env.PORT || 5000;
+const DOMAIN = process.env.DOMAIN || "http://localhost:" + PORT; // Gunakan domain Railway atau custom
 
 // Middleware
 app.use(cors());
@@ -33,12 +34,15 @@ const upload = multer({ storage });
 app.post("/upload", upload.single("image"), (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
-  // Gunakan URL yang sesuai dengan Railway
-  const imageUrl = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+  // Debugging - Cek host di Railway logs
+  console.log("Host:", req.get("host"));
+
+  // Gunakan DOMAIN Railway atau custom
+  const imageUrl = `${DOMAIN}/uploads/${req.file.filename}`;
   res.json({ imageUrl });
 });
 
 // Jalankan server
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running on ${DOMAIN}`);
 });
