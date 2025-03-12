@@ -5,13 +5,15 @@ const path = require("path");
 const fs = require("fs");
 
 const app = express();
-const PORT = process.env.PORT || 8080; // Pakai PORT dari Railway
+const PORT = process.env.PORT || 8080;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // 🔥 FIX UNTUK MULTIPART FORM
 app.use("/uploads", express.static("uploads"));
 
-// Konfigurasi Multer (simpan di folder 'uploads')
+// Konfigurasi Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = "uploads";
@@ -21,23 +23,23 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Nama unik
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 
 const upload = multer({ storage });
 
-// Route upload gambar
+// Route Upload
 app.post("/upload", upload.single("image"), (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
-  const domain = process.env.RAILWAY_PUBLIC_DOMAIN || `http://localhost:${PORT}`;
+  const domain = process.env.RAILWAY_PUBLIC_DOMAIN || `https://langzpanel.railway.app`;
   const imageUrl = `${domain}/uploads/${req.file.filename}`;
 
   res.json({ imageUrl });
 });
 
-// Jalankan server di 0.0.0.0 (bukan localhost)
+// Jalankan server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on ${process.env.RAILWAY_PUBLIC_DOMAIN || `http://localhost:${PORT}`}`);
 });
