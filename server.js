@@ -33,6 +33,9 @@ const upload = multer({ storage });
 app.post("/upload", upload.single("image"), (req, res) => {
   if (!req.file) return res.status(400).json({ error: "No file uploaded" });
 
+  const uploadPath = path.join(__dirname, "uploads", req.file.filename);
+  console.log("File tersimpan di:", uploadPath); // 🔍 Debugging
+
   const domain = process.env.RAILWAY_PUBLIC_DOMAIN || `https://langzpanel.railway.app`;
   const imageUrl = `${domain}/uploads/${req.file.filename}`;
 
