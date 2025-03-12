@@ -42,7 +42,8 @@ app.post("/upload", upload.single("image"), (req, res) => {
   res.json({ imageUrl });
 });
 
-// Jalankan server
+const DOMAIN = process.env.RAILWAY_STATIC_URL || `http://localhost:${PORT}`;
+
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on ${DOMAIN}`);
 });
