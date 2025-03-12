@@ -7,8 +7,7 @@ const fs = require("fs");
 // Inisialisasi server
 const app = express();
 const PORT = process.env.PORT || 5000;
-const DOMAIN = process.env.DOMAIN || "http://localhost:" + PORT; // Gunakan domain Railway atau custom
-
+const DOMAIN = process.env.RAILWAY_STATIC_URL || `http://localhost:${PORT}`;
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -42,7 +41,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
   res.json({ imageUrl });
 });
 
-const DOMAIN = process.env.RAILWAY_STATIC_URL || `http://localhost:${PORT}`;
+
 
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on ${DOMAIN}`);
